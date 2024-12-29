@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using TestTask.Data;
 using TestTask.Models;
 using TestTask.Services.Interfaces;
@@ -14,18 +16,14 @@ namespace TestTask.Services.Implementations
         }
         public Task<Book> GetBook()
         {
-            Book book = _context.Books.
-                OrderByDescending(b => b.Price * b.QuantityPublished).FirstOrDefault();
+            Book book = _context.Books.OrderByDescending(b => b.Price * b.QuantityPublished).FirstOrDefault();
             return Task.FromResult(book);
         }
-        //public Task<Book> GetBook()
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public Task<List<Book>> GetBooks()
         {
-            throw new NotImplementedException();
+            List<Book> books = _context.Books.Where(b => b.Title.Contains("Red") && b.PublishDate >= new DateTime(2012, 5, 25)).ToList<Book>();
+            return Task.FromResult(books);
         }
     }
 }
